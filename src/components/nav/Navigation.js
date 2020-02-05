@@ -42,9 +42,7 @@ export default function ButtonAppBar() {
       <AppBar position="static" className={classes.appBar}>
         <Toolbar>
           <Link className={classes.link} to="/">
-            <Typography variant="h6" className={classes.title}>
-                            Blog IT
-            </Typography>
+            <Typography variant="h6" className={classes.title}>Blog</Typography>
           </Link>
           <Link className={classes['link--right']} to="/categories">
             <Button className={classes.button}>Categories</Button>

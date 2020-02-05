@@ -1,0 +1,15 @@
+version: '3.5'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: "app"
+    image: react-rest-blog-app
+    environment:
+      - NODE_ENV=development
+    volumes:
+    - "./:/usr/src/app"
+    ports:
+      - "8000:3000"

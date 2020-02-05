@@ -10,8 +10,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 
 import ArticlesList from './ArticlesList';
-import Navigation from './Navigation';
-
+import Navigation from './components/nav/Navigation';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -19,8 +18,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-
-const App = props => (
+const App = (props) => (
   <BrowserRouter>
     <Navigation />
     <Switch>
