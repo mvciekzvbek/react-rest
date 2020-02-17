@@ -81,7 +81,7 @@ const ArticlesList = (props) => {
         {articles.links.next && (
           <Button
             onClick={ (e) => {
-              setUrl(articles.links.next) 
+              setUrl(articles.links.next)
             }}
             color="primary"
             variant="contained"
