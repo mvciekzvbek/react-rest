@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    container_name: "app"
+    container_name: "blog-app"
     image: react-rest-blog-app
     environment:
       - NODE_ENV=development
