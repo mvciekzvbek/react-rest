@@ -6,6 +6,7 @@ import Profile from './views/Profile';
 import NavBar from './components/nav/NavBar';
 import HomePage from './views/HomePage';
 import CategoriesList from './views/Category/CategoriesList';
+import ArticlesList from "./views/Article/ArticlesList";
 
 function App() {
   const { isAuthenticated, user } = useAuth0();
@@ -34,11 +35,15 @@ function App() {
         <NavBar />
       </header>
       <Switch>
-        <Route path="/" exact component={HomePage} />
+        {isAuthenticated ? (
+          <PrivateRoute path="/" exact component={ArticlesList} />
+        ) : (
+          <Route path="/" exact component={HomePage} />
+        )}
         <PrivateRoute path="/profile" component={Profile} />
         {/*<PrivateRoute component={Users} exact path="/users" />*/}
         {/*<PrivateRoute component={User} path="/users/:id" />*/}
-        <Route path="/latest" component={HomePage} />
+        <Route path="/latest" component={ArticlesList} />
         <PrivateRoute component={CategoriesList} exact path="/categories" />
         {/*<PrivateRoute component={Category} path="/categories/:id" />*/}
         {/*<PrivateRoute component={({ location }) => <h1>"{location.pathname}" not found</h1>} />*/}
