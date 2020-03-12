@@ -85,11 +85,12 @@ export default function NavBar() {
   };
 
   return (
-    <div className={classes.root}>
+    <nav>
+      <div className={classes.root}>
       <AppBar position="static" className={classes.appBar}>
         <Toolbar>
           <Typography variant="h6" className={classes.title}>
-            <Link href="/" className={classes.link}>
+            <Link className={classes.link} component={RouterLink} to="/" >
               MZ
             </Link>
           </Typography>
@@ -102,17 +103,6 @@ export default function NavBar() {
                   <Tab label="Categories" component={RouterLink} to="/categories" {...a11yProps(1)} />
                 </Tabs>
               </div>
-              {/*<div className={classes.sectionMobile}>*/}
-              {/*  <IconButton*/}
-              {/*    aria-label="show more"*/}
-              {/*    aria-controls={mobileMenuId}*/}
-              {/*    aria-haspopup="true"*/}
-              {/*    onClick={handleMobileMenuOpen}*/}
-              {/*    color="inherit"*/}
-              {/*  >*/}
-              {/*    <MoreIcon />*/}
-              {/*  </IconButton>*/}
-              {/*</div>*/}
               <div>
                 <IconButton
                   aria-label="account of current user"
@@ -150,5 +140,6 @@ export default function NavBar() {
         </Toolbar>
       </AppBar>
     </div>
+    </nav>
   );
 }
