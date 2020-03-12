@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { useAuth0 } from './react-auth0-spa';
 import PrivateRoute from './components/PrivateRoute';
-import Profile from './views/Profile';
-import NavBar from './components/nav/NavBar';
-import HomePage from './views/HomePage';
-import CategoriesList from './views/Category/CategoriesList';
-import ArticlesList from "./views/Article/ArticlesList";
+import Profile from './components/profile/Profile';
+import Header from './components/shared/Header';
+import HomePage from './components/home/HomePage';
+import CategoriesList from './components/category/CategoriesList';
+import ArticlesList from "./components/article/ArticlesList";
+import PageNotFound from "./components/PageNotFound";
 
 function App() {
   const { isAuthenticated, user } = useAuth0();
   const [accessToken, setAccessToken] = useState('');
-
   const { getTokenSilently, loading } = useAuth0();
 
   if (loading) {
@@ -31,22 +31,17 @@ function App() {
 
   return (
     <div className="App">
-      <header>
-        <NavBar />
-      </header>
+      <Header />
       <Switch>
         {isAuthenticated ? (
-          <PrivateRoute path="/" exact component={ArticlesList} />
+          <PrivateRoute exact path="/" component={ArticlesList} />
         ) : (
-          <Route path="/" exact component={HomePage} />
+          <Route exact path="/" component={HomePage} />
         )}
         <PrivateRoute path="/profile" component={Profile} />
-        {/*<PrivateRoute component={Users} exact path="/users" />*/}
-        {/*<PrivateRoute component={User} path="/users/:id" />*/}
         <Route path="/latest" component={ArticlesList} />
         <PrivateRoute component={CategoriesList} exact path="/categories" />
-        {/*<PrivateRoute component={Category} path="/categories/:id" />*/}
-        {/*<PrivateRoute component={({ location }) => <h1>"{location.pathname}" not found</h1>} />*/}
+        <Route component={PageNotFound}></Route>
       </Switch>
     </div>
   );
