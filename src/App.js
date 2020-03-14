@@ -9,6 +9,7 @@ import CategoriesList from './components/category/CategoriesList';
 import ArticlesList from './components/article/ArticlesList';
 import ArticleCreate from './components/article/ArticleCreate';
 import PageNotFound from './components/PageNotFound';
+import client from './utils/client';
 
 function App() {
   const { isAuthenticated, user } = useAuth0();
@@ -24,6 +25,12 @@ function App() {
     try {
       const token = await getTokenSilently();
       setAccessToken(token);
+      client.interceptors.request.use((config) => {
+        config.headers.Authorization = `Bearer ${token}`;
+        return config;
+      }, (err) => {
+        console.log(err);
+      });
     } catch (e) {
       console.log(e);
     }
@@ -41,7 +48,7 @@ function App() {
         )}
         <PrivateRoute path="/profile" component={Profile} />
         <PrivateRoute component={CategoriesList} exact path="/categories" />
-        <PrivateRoute component={ArticleCreate} exact path="/create"/>
+        <PrivateRoute component={ArticleCreate} exact path="/create" />
         <Route path="/latest" component={ArticlesList} />
         <Route component={PageNotFound} />
       </Switch>

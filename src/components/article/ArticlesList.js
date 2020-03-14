@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
@@ -6,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
 import Container from '@material-ui/core/Container';
 import ArticlesListItem from './ArticlesListItem';
-import { useAuth0 } from '../../react-auth0-spa';
+import client from '../../utils/client';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -42,16 +41,12 @@ const useStyles = makeStyles((theme) => ({
 
 const ArticlesList = (props) => {
   const classes = useStyles();
-  const [url, setUrl] = useState('http://localhost:3000/api/v1/articles');
+  const [url, setUrl] = useState('/articles');
   const [articles, setArticles] = useState({ hits: [], count: 0, links: {} });
-  const { getTokenSilently } = useAuth0();
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = await getTokenSilently();
-      const articlesFetched = await axios(url, {
-        headers: { authorization: `Bearer ${token}` },
-      });
+      const articlesFetched = await client.get(url);
 
       setArticles({
         hits: articlesFetched.data.hits,
@@ -59,8 +54,11 @@ const ArticlesList = (props) => {
         links: articlesFetched.data.links,
       });
     };
-    fetchData();
-  }, [url]);
+
+    setTimeout(() => {
+      fetchData();
+    }, 0);
+  }, []);
 
   return (
     <Container className={classes.container}>

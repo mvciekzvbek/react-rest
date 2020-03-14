@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import TextField from '@material-ui/core/TextField';
 import { Container } from '@material-ui/core';
 import Icon from '@material-ui/core/Icon';
 import Button from '@material-ui/core/Button';
-import client from '../../utils/client';
-import { useAuth0 } from '../../react-auth0-spa';
+import { connect } from 'react-redux';
+import { createArticle } from '../../redux/actions/articleActions';
+import { fetchCategories } from '../../redux/actions/categoryActions';
+import PropTypes from 'prop-types';
 
 const useStyles = makeStyles({
   root: {
@@ -38,21 +40,22 @@ const useStyles = makeStyles({
 
 const ArticleCreate = (props) => {
   const classes = useStyles();
-  const { getTokenSilently } = useAuth0();
+  const { categories } = props;
   const [articleState, setArticleState] = useState({
     title: '',
     lead: '',
     imageUrl: '',
     body: '',
+    categories: [],
   });
 
-  const handleCreate = async () => {
-    const token = await getTokenSilently();
-    client.post('/articles',
-      articleState,
-      {
-        headers: { authorization: `Bearer ${token}` },
-      });
+  useEffect(() => {
+    props.dispatch(fetchCategories());
+  }, []);
+
+  const handleCreate = (e) => {
+    e.preventDefault();
+    props.dispatch(createArticle(articleState));
   };
 
   const createInputHandler = (key) => (e) => {
@@ -125,5 +128,18 @@ const ArticleCreate = (props) => {
   );
 };
 
+ArticleCreate.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  categories: PropTypes.shape({
+    items: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    })).isRequired,
+  }).isRequired,
+};
 
-export default ArticleCreate;
+const mapStateToProps = (state) => ({
+  categories: state.categories,
+});
+
+export default connect(mapStateToProps)(ArticleCreate);
