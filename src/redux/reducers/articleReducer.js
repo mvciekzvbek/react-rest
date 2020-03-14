@@ -10,7 +10,7 @@ const initialState = {
   error: null,
 };
 
-const categoryReducer = (state = initialState, action) => {
+const articleReducer = (state = initialState, action) => {
   switch (action.type) {
     case CREATE_ARTICLE_BEGIN:
       return {
@@ -36,4 +36,4 @@ const categoryReducer = (state = initialState, action) => {
   }
 };
 
-export default categoryReducer;
+export default articleReducer;
