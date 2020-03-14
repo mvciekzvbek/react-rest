@@ -6,8 +6,9 @@ import Profile from './components/profile/Profile';
 import Header from './components/shared/Header';
 import HomePage from './components/home/HomePage';
 import CategoriesList from './components/category/CategoriesList';
-import ArticlesList from "./components/article/ArticlesList";
-import PageNotFound from "./components/PageNotFound";
+import ArticlesList from './components/article/ArticlesList';
+import ArticleCreate from './components/article/ArticleCreate';
+import PageNotFound from './components/PageNotFound';
 
 function App() {
   const { isAuthenticated, user } = useAuth0();
@@ -39,9 +40,10 @@ function App() {
           <Route exact path="/" component={HomePage} />
         )}
         <PrivateRoute path="/profile" component={Profile} />
-        <Route path="/latest" component={ArticlesList} />
         <PrivateRoute component={CategoriesList} exact path="/categories" />
-        <Route component={PageNotFound}></Route>
+        <PrivateRoute component={ArticleCreate} exact path="/create"/>
+        <Route path="/latest" component={ArticlesList} />
+        <Route component={PageNotFound} />
       </Switch>
     </div>
   );
