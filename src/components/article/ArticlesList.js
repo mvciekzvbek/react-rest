@@ -7,7 +7,6 @@ import Container from '@material-ui/core/Container';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import client from '../../utils/client';
 import ArticlesListItem from './ArticlesListItem';
 import * as articleActions from '../../redux/actions/articleActions';
 import * as categoryActions from '../../redux/actions/categoryActions';

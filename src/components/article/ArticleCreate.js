@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
+import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import { Container } from '@material-ui/core';
 import Icon from '@material-ui/core/Icon';
@@ -9,10 +10,13 @@ import PropTypes from 'prop-types';
 import * as articleActions from '../../redux/actions/articleActions';
 import * as categoryActions from '../../redux/actions/categoryActions';
 import { bindActionCreators } from 'redux';
+import CategorySelect from './CategorySelect';
 
 const useStyles = makeStyles({
   root: {
-
+  },
+  formControl: {
+    width: '100%',
   },
   form: {
     display: 'flex',
@@ -20,8 +24,10 @@ const useStyles = makeStyles({
   },
   textField: {
   },
+  select: {
+    width: '100%',
+  },
   notchedOutline: {
-    // borderColor: 'red',
     '&.MuiOutlinedInput-root.Mui-focused': {
       borderColor: '#0093ff!important',
     },
@@ -37,27 +43,27 @@ const useStyles = makeStyles({
       backgroundColor: '#0072c5',
     },
   },
+  chips: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  chip: {
+    margin: 2,
+  },
 });
 
 const ArticleCreate = (props) => {
   const classes = useStyles();
-  const { categories } = props;
   const [articleState, setArticleState] = useState({
     title: '',
     lead: '',
     imageUrl: '',
     body: '',
-    categories: [],
+    categoriesIds: [],
   });
-
-  useEffect(() => {
-    // props.dispatch(fetchCategories());
-    props.categoryActions.fetchCategories();
-  }, []);
 
   const handleCreate = (e) => {
     e.preventDefault();
-    // props.dispatch(createArticle(articleState));
     props.articleActions.createArticle(articleState);
   };
 
@@ -68,52 +74,72 @@ const ArticleCreate = (props) => {
     });
   };
 
+  const selectCategory = (ids) => {
+    setArticleState({
+      ...articleState,
+      categoriesIds: ids,
+    });
+  };
+
   return (
     <Container className={classes.root} maxWidth="md">
       <div>
         <form className={classes.form} autoComplete="off">
-          <TextField
-            required
-            fullWidth
-            label="Title"
-            variant="outlined"
-            margin="normal"
-            InputProps={{
-              classes: {
-                notchedOutline: classes.notchedOutline,
-              },
-            }}
-            className={classes.textField}
-            onChange={createInputHandler('title')}
-          />
-          <TextField
-            required
-            fullWidth
-            label="Lead"
-            variant="outlined"
-            margin="normal"
-            className={classes.textField}
-            onChange={createInputHandler('lead')}
-          />
-          <TextField
-            required
-            fullWidth
-            label="Image"
-            variant="outlined"
-            margin="normal"
-            className={classes.textField}
-            onChange={createInputHandler('imageUrl')}
-          />
-          <TextField
-            label="Body"
-            multiline
-            fullWidth
-            rows="8"
-            variant="outlined"
-            margin="normal"
-            className={classes.textField}
-            onChange={createInputHandler('body')}
-          />
+          <FormControl className={classes.formControl}>
+            <TextField
+              required
+              fullWidth
+              label="Title"
+              variant="outlined"
+              margin="normal"
+              InputProps={{
+                classes: {
+                  notchedOutline: classes.notchedOutline,
+                },
+              }}
+              className={classes.textField}
+              onChange={createInputHandler('title')}
+            />
+          </FormControl>
+          <FormControl className={classes.formControl}>
+            <TextField
+              required
+              fullWidth
+              label="Lead"
+              variant="outlined"
+              margin="normal"
+              className={classes.textField}
+              onChange={createInputHandler('lead')}
+            />
+          </FormControl>
+          <FormControl className={classes.formControl}>
+            <TextField
+              required
+              fullWidth
+              label="Image"
+              variant="outlined"
+              margin="normal"
+              className={classes.textField}
+              onChange={createInputHandler('imageUrl')}
+            />
+          </FormControl>
+          <FormControl className={classes.formControl}>
+            <CategorySelect
+              handleSelect={selectCategory}
+            />
+          </FormControl>
+          <FormControl className={classes.formControl}>
+            <TextField
+              label="Body"
+              multiline
+              fullWidth
+              rows="8"
+              variant="outlined"
+              margin="normal"
+              className={classes.textField}
+              onChange={createInputHandler('body')}
+            />
+          </FormControl>
         </form>
       </div>
       <div className={classes.buttonsContainer}>
