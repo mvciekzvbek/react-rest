@@ -4,13 +4,9 @@ import {
   FETCH_CATEGORIES_FAILURE,
 } from '../actions/actionTypes';
 
-const initialState = {
-  items: [],
-  loading: false,
-  error: null,
-};
+import initialState from './initialState';
 
-const categoryReducer = (state = initialState, action) => {
+const categoryReducer = (state = initialState.categories, action) => {
   switch (action.type) {
     case FETCH_CATEGORIES_BEGIN:
       return {

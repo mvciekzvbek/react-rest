@@ -4,8 +4,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
 import Container from '@material-ui/core/Container';
-import ArticlesListItem from './ArticlesListItem';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { bindActionCreators } from 'redux';
 import client from '../../utils/client';
+import ArticlesListItem from './ArticlesListItem';
+import * as articleActions from '../../redux/actions/articleActions';
+import * as categoryActions from '../../redux/actions/categoryActions';
+
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -40,24 +46,22 @@ const useStyles = makeStyles((theme) => ({
 
 
 const ArticlesList = (props) => {
+  const { articles, categories, articleActions: actions } = props;
   const classes = useStyles();
   const [url, setUrl] = useState('/articles');
-  const [articles, setArticles] = useState({ hits: [], count: 0, links: {} });
+  const [articlesList, setArticlesList] = useState(articles);
 
   useEffect(() => {
     const fetchData = async () => {
-      const articlesFetched = await client.get(url);
-
-      setArticles({
-        hits: articlesFetched.data.hits,
-        count: articlesFetched.data.count,
-        links: articlesFetched.data.links,
-      });
+      const fetched = await actions.fetchArticles();
+      setArticlesList(fetched);
     };
 
-    setTimeout(() => {
-      fetchData();
-    }, 0);
+    if (articles.items.length === 0) {
+      setTimeout(() => {
+        fetchData();
+      }, 0);
+    }
   }, []);
 
   return (
@@ -95,4 +99,34 @@ const ArticlesList = (props) => {
   );
 };
 
-export default ArticlesList;
+ArticlesList.propTypes = {
+  // createArticle: PropTypes.func.isRequired,
+  // with bindActionCreators
+  articleActions: PropTypes.object.isRequired,
+  articles: PropTypes.shape({
+    items: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+      lead: PropTypes.string,
+      body: PropTypes.string.isRequired,
+      image_url: PropTypes.string,
+      created_at: PropTypes.string.isRequired,
+      modified_at: PropTypes.string.isRequired,
+    })).isRequired,
+  }).isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  articles: state.articles,
+  categories: state.categories,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  // createArticle: (article) => dispatch(articleActions.createArticle(article)),
+  // fetchCategories: () => dispatch(categoryActions.fetchCategories()),
+  // or with bindActionCreators
+  articleActions: bindActionCreators(articleActions, dispatch),
+  // categoryActions: bindActionCreators(categoryActions, dispatch),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ArticlesList);

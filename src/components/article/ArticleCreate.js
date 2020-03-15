@@ -10,9 +10,6 @@ import * as articleActions from '../../redux/actions/articleActions';
 import * as categoryActions from '../../redux/actions/categoryActions';
 import { bindActionCreators } from 'redux';
 
-console.log(articleActions);
-console.log(categoryActions);
-
 const useStyles = makeStyles({
   root: {
 
