@@ -5,9 +5,13 @@ import { Container } from '@material-ui/core';
 import Icon from '@material-ui/core/Icon';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
-import { createArticle } from '../../redux/actions/articleActions';
-import { fetchCategories } from '../../redux/actions/categoryActions';
 import PropTypes from 'prop-types';
+import * as articleActions from '../../redux/actions/articleActions';
+import * as categoryActions from '../../redux/actions/categoryActions';
+import { bindActionCreators } from 'redux';
+
+console.log(articleActions);
+console.log(categoryActions);
 
 const useStyles = makeStyles({
   root: {
@@ -50,12 +54,14 @@ const ArticleCreate = (props) => {
   });
 
   useEffect(() => {
-    props.dispatch(fetchCategories());
+    // props.dispatch(fetchCategories());
+    props.categoryActions.fetchCategories();
   }, []);
 
   const handleCreate = (e) => {
     e.preventDefault();
-    props.dispatch(createArticle(articleState));
+    // props.dispatch(createArticle(articleState));
+    props.articleActions.createArticle(articleState);
   };
 
   const createInputHandler = (key) => (e) => {
@@ -129,7 +135,10 @@ const ArticleCreate = (props) => {
 };
 
 ArticleCreate.propTypes = {
-  dispatch: PropTypes.func.isRequired,
+  // createArticle: PropTypes.func.isRequired,
+  // with bindActionCreators
+  articleActions: PropTypes.object.isRequired,
+  categoryActions: PropTypes.object.isRequired,
   categories: PropTypes.shape({
     items: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number.isRequired,
@@ -142,4 +151,13 @@ const mapStateToProps = (state) => ({
   categories: state.categories,
 });
 
-export default connect(mapStateToProps)(ArticleCreate);
+const mapDispatchToProps = (dispatch) => ({
+  // createArticle: (article) => dispatch(articleActions.createArticle(article)),
+  // fetchCategories: () => dispatch(categoryActions.fetchCategories()),
+  // or with bindActionCreators
+  articleActions: bindActionCreators(articleActions, dispatch),
+  categoryActions: bindActionCreators(categoryActions, dispatch),
+});
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(ArticleCreate);

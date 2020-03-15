@@ -2,7 +2,7 @@ import {
   FETCH_CATEGORIES_BEGIN,
   FETCH_CATEGORIES_SUCCESS,
   FETCH_CATEGORIES_FAILURE,
-} from '../actions/categoryActions';
+} from '../actions/actionTypes';
 
 const initialState = {
   items: [],

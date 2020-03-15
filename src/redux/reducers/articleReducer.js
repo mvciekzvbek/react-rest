@@ -2,7 +2,7 @@ import {
   CREATE_ARTICLE_BEGIN,
   CREATE_ARTICLE_SUCCESS,
   CREATE_ARTICLE_FAILURE,
-} from '../actions/articleActions';
+} from '../actions/actionTypes';
 
 const initialState = {
   items: [],

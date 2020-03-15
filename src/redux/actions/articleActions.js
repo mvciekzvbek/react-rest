@@ -1,13 +1,10 @@
-// const createArticle = (article) => ({ type: 'CREATE_ARTICLE', article });
-//
-// export default createArticle;
-
-
 import client from '../../utils/client';
 
-export const CREATE_ARTICLE_BEGIN = 'CREATE_ARTICLE_BEGIN';
-export const CREATE_ARTICLE_SUCCESS = 'CREATE_ARTICLE_SUCCESS';
-export const CREATE_ARTICLE_FAILURE = 'CREATE_ARTICLE_FAILURE';
+import {
+  CREATE_ARTICLE_BEGIN,
+  CREATE_ARTICLE_SUCCESS,
+  CREATE_ARTICLE_FAILURE,
+} from './actionTypes';
 
 export const createArticleBegin = () => ({
   type: CREATE_ARTICLE_BEGIN,
