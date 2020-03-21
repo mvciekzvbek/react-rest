@@ -7,7 +7,7 @@ import Header from './components/shared/Header';
 import HomePage from './components/home/HomePage';
 import CategoriesList from './components/category/CategoriesList';
 import ArticlesList from './components/article/ArticlesList';
-import ArticleCreate from './components/article/ArticleCreate';
+import ArticleCreate from './components/article/ManageArticle';
 import PageNotFound from './components/PageNotFound';
 import client from './utils/client';
 

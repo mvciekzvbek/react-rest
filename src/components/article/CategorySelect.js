@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
@@ -7,11 +7,10 @@ import Chip from '@material-ui/core/Chip';
 import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as categoryActions from '../../redux/actions/categoryActions';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
+
 const MenuProps = {
   PaperProps: {
     style: {
@@ -31,17 +30,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const CategorySelect = (props) => {
+const CategorySelect = ({
+  categories,
+  onSelect,
+}) => {
   const classes = useStyles();
-  const { categories, categoryActions: actions , handleSelect } = props;
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    if (categories.items.length === 0) {
-      actions.fetchCategories();
-    }
-  }, []);
 
   const handleChange = (e) => {
     setSelectedCategories(e.target.value);
@@ -49,7 +44,12 @@ const CategorySelect = (props) => {
       const match = categories.items.filter((category) => name === category.name);
       return match[0].id;
     });
-    handleSelect(ids);
+    onSelect({
+      target: {
+        name: e.target.name,
+        value: ids,
+      },
+    });
   };
 
   const toggleOpen = () => setIsOpen(!isOpen);
@@ -66,6 +66,7 @@ const CategorySelect = (props) => {
         onChange={handleChange}
         onClick={toggleOpen}
         input={<Input id="select-multiple-chip" />}
+        name="categoriesIds"
         renderValue={(selected) => (
           <div className={classes.chips}>
             {selected.map((value) => (
@@ -87,25 +88,17 @@ const CategorySelect = (props) => {
 };
 
 CategorySelect.propTypes = {
-  categoryActions: PropTypes.shape({
-    fetchCategories: PropTypes.func.isRequired,
-  }).isRequired,
   categories: PropTypes.shape({
     items: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number.isRequired,
       name: PropTypes.string.isRequired,
     })).isRequired,
   }).isRequired,
-  handleSelect: PropTypes.func.isRequired,
+  onSelect: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   categories: state.categories,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  categoryActions: bindActionCreators(categoryActions, dispatch),
-});
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(CategorySelect);
+export default connect(mapStateToProps)(CategorySelect);
