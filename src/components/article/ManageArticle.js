@@ -9,7 +9,7 @@ import * as articleActions from '../../redux/actions/articleActions';
 import * as categoryActions from '../../redux/actions/categoryActions';
 import ArticleForm from './ArticleForm';
 
-const initalArticle = {
+const initialArticle = {
   title: '',
   lead: '',
   imageUrl: '',
@@ -114,7 +114,7 @@ ManageArticle.propTypes = {
 
 const mapStateToProps = (state) => ({
   categories: state.categories,
-  article: initalArticle,
+  article: initialArticle,
 });
 
 // const mapDispatchToProps = (dispatch) => {
