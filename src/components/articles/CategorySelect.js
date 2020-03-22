@@ -5,6 +5,7 @@ import Select from '@material-ui/core/Select';
 import Input from '@material-ui/core/Input';
 import Chip from '@material-ui/core/Chip';
 import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -33,6 +34,7 @@ const useStyles = makeStyles(() => ({
 const CategorySelect = ({
   categories,
   onSelect,
+  errors,
 }) => {
   const classes = useStyles();
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -83,6 +85,7 @@ const CategorySelect = ({
           </MenuItem>
         ))}
       </Select>
+      <FormHelperText>{errors}</FormHelperText>
     </>
   );
 };
@@ -95,6 +98,7 @@ CategorySelect.propTypes = {
     })).isRequired,
   }).isRequired,
   onSelect: PropTypes.func.isRequired,
+  errors: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({

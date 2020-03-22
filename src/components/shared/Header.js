@@ -127,7 +127,8 @@ export default function NavBar() {
                     open={open}
                     onClose={handleClose}
                   >
-                    <MenuItem onClick={handleClose} component={RouterLink} to="/profile">Profile</MenuItem>
+                    <MenuItem onClick={handleClose} component={RouterLink} to={`/users/${user.nickname}`}>Profile</MenuItem>
+                    <MenuItem onClick={handleClose} component={RouterLink} to={`/users/${user.nickname}/articles`}>Your articles</MenuItem>
                     <MenuItem onClick={logout}>Logout</MenuItem>
                   </Menu>
                 </div>

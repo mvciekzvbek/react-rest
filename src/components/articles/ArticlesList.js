@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import classNames from 'classnames';
 import Container from '@material-ui/core/Container';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import ArticlesListItem from './ArticlesListItem';
 import * as articleActions from '../../redux/actions/articleActions';
-import * as categoryActions from '../../redux/actions/categoryActions';
-
+import Spinner from '../shared/Spinner';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -18,8 +13,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: '32px',
   },
   root: {
-    flexGrow: 1,
-    position: 'relative',
+    display: 'flex',
   },
   gridContainer: {
     marginBottom: '32px',
@@ -66,6 +60,13 @@ const ArticlesList = (props) => {
   return (
     <Container className={classes.container}>
       <div className={classes.root}>
+        {articles.loading ? (
+          <Spinner />
+        ) : (
+          <div>
+            Loaded
+          </div>
+        )}
         {/* <Grid container spacing={3} className={classes.gridContainer}> */}
         {/*  {articles.hits.map(article => ( */}
         {/*    <Grid item sm={4} xs={12} key={article._id} className={classes.gridItem}> */}

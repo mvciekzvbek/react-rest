@@ -1,7 +1,9 @@
 import {
-  CREATE_ARTICLE_BEGIN,
+  SAVE_ARTICLE_BEGIN,
   CREATE_ARTICLE_SUCCESS,
   CREATE_ARTICLE_FAILURE,
+  UPDATE_ARTICLE_FAILURE,
+  UPDATE_ARTICLE_SUCCESS,
   FETCH_ARTICLE_BEGIN,
   FETCH_ARTICLE_SUCCESS,
   FETCH_ARTICLE_FAILURE,
@@ -11,7 +13,7 @@ import initialState from './initialState';
 
 const articleReducer = (state = initialState.articles, action) => {
   switch (action.type) {
-    case CREATE_ARTICLE_BEGIN:
+    case SAVE_ARTICLE_BEGIN:
       return {
         ...state,
         loading: true,
@@ -24,6 +26,15 @@ const articleReducer = (state = initialState.articles, action) => {
         items: [...state.items, action.payload.article],
       };
     case CREATE_ARTICLE_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.error,
+        items: [],
+      };
+    case UPDATE_ARTICLE_SUCCESS:
+      return state.map((article) => (article.id === action.article.id ? action.article : article));
+    case UPDATE_ARTICLE_FAILURE:
       return {
         ...state,
         loading: false,

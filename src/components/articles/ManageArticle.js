@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Container } from '@material-ui/core';
-import Icon from '@material-ui/core/Icon';
-import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import * as articleActions from '../../redux/actions/articleActions';
 import * as categoryActions from '../../redux/actions/categoryActions';
+import * as snackbarActions from '../../redux/actions/snackbarActions';
 import ArticleForm from './ArticleForm';
+import Spinner from '../shared/Spinner';
 
 const initialArticle = {
   title: '',
@@ -34,9 +34,12 @@ const useStyles = makeStyles({
 });
 
 const ManageArticle = ({
-  createArticle,
+  saveArticle,
   fetchCategories,
+  showSuccessSnackbar,
+  showFailureSnackbar,
   categories,
+  history,
   ...props
 }) => {
   const classes = useStyles();
@@ -44,17 +47,15 @@ const ManageArticle = ({
     ...props.article,
   });
   const [errors, setErrors] = useState({});
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (categories.items.length === 0) {
       fetchCategories();
+    } else {
+      setArticle({ ...props.article });
     }
-  }, []);
-
-  const handleCreate = (e) => {
-    e.preventDefault();
-    createArticle(article);
-  };
+  }, [props.article]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -64,27 +65,46 @@ const ManageArticle = ({
     });
   };
 
+  const formIsValid = () => {
+    const { title, body, categoriesIds } = article;
+
+    const errors = {};
+
+    if (!title) errors.title = 'Title is required';
+    if (!body) errors.body = 'Article body is required';
+    if (!categoriesIds.length) errors.categoriesIds = 'At least one category is required';
+
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleSave = (e) => {
+    e.preventDefault();
+    if (!formIsValid()) return;
+    setSaving(true);
+    saveArticle(article).then(() => {
+      showSuccessSnackbar('Success!');
+      history.push('/articles');
+    }).catch(() => {
+      setSaving(false);
+      showFailureSnackbar('An error occurred');
+    });
+  };
+
   return (
     <Container className={classes.root} maxWidth="md">
-      <div>
+      { categories.loading ? (
+        <Spinner />
+      ) : (
         <ArticleForm
           errors={errors}
           article={article}
           categories={categories}
           onChange={handleChange}
+          onSave={handleSave}
+          saving={saving}
         />
-      </div>
-      <div className={classes.buttonsContainer}>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          endIcon={<Icon>send</Icon>}
-          onClick={handleCreate}
-        >
-          Send
-        </Button>
-      </div>
+      )}
     </Container>
   );
 };
@@ -101,8 +121,9 @@ const ManageArticle = ({
 // };
 
 ManageArticle.propTypes = {
-  createArticle: PropTypes.func.isRequired,
+  saveArticle: PropTypes.func.isRequired,
   fetchCategories: PropTypes.func.isRequired,
+  showSuccessSnackbar: PropTypes.func.isRequired,
   categories: PropTypes.shape({
     items: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.number.isRequired,
@@ -110,12 +131,23 @@ ManageArticle.propTypes = {
     })).isRequired,
   }).isRequired,
   article: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  categories: state.categories,
-  article: initialArticle,
-});
+export const getArticleById = (articles, id) => {
+  return articles.find((article) => article.id === id) || null;
+};
+
+const mapStateToProps = (state, ownProps) => {
+  const { id } = ownProps.match.params;
+  const article = id && state.articles.items.length
+    ? getArticleById(state.articles, id)
+    : initialArticle;
+  return {
+    categories: state.categories,
+    article,
+  };
+};
 
 // const mapDispatchToProps = (dispatch) => {
 //   // createArticle: (article) => dispatch(articleActions.createArticle(article)),
@@ -126,8 +158,10 @@ const mapStateToProps = (state) => ({
 // };
 
 const mapDispatchToProps = {
-  createArticle: articleActions.createArticle,
+  saveArticle: articleActions.saveArticle,
   fetchCategories: categoryActions.fetchCategories,
+  showSuccessSnackbar: snackbarActions.showSuccessSnackbar,
+  showFailureSnackbar: snackbarActions.showFailureSnackbar,
 };
 
 

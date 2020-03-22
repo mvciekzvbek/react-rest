@@ -1,16 +1,18 @@
 import client from '../../utils/client';
 
 import {
-  CREATE_ARTICLE_BEGIN,
+  SAVE_ARTICLE_BEGIN,
   CREATE_ARTICLE_SUCCESS,
   CREATE_ARTICLE_FAILURE,
+  UPDATE_ARTICLE_SUCCESS,
+  UPDATE_ARTICLE_FAILURE,
   FETCH_ARTICLE_BEGIN,
   FETCH_ARTICLE_SUCCESS,
   FETCH_ARTICLE_FAILURE,
 } from './actionTypes';
 
-export const createArticleBegin = () => ({
-  type: CREATE_ARTICLE_BEGIN,
+export const saveArticleBegin = () => ({
+  type: SAVE_ARTICLE_BEGIN,
 });
 
 export const createArticleSuccess = (article) => ({
@@ -18,9 +20,19 @@ export const createArticleSuccess = (article) => ({
   payload: { article },
 });
 
-export const createArticleFailure = (error) => ({
+export const createArticleFailure = (article) => ({
   type: CREATE_ARTICLE_FAILURE,
-  payload: { error },
+  payload: { article },
+});
+
+export const updateArticleSuccess = (article) => ({
+  type: UPDATE_ARTICLE_SUCCESS,
+  payload: { article },
+});
+
+export const updateArticleFailure = (article) => ({
+  type: UPDATE_ARTICLE_FAILURE,
+  payload: { article },
 });
 
 export const fetchArticleBegin = () => ({
@@ -39,14 +51,30 @@ export const fetchArticleFailure = (error) => ({
   payload: { error },
 });
 
-export const createArticle = (article) => (dispatch) => {
-  dispatch(createArticleBegin());
-  return client.post('/articles', article)
-    .then(({ data }) => {
-      dispatch(createArticleSuccess(data));
-      return data;
-    })
-    .catch((error) => dispatch(createArticleFailure(error)));
+export const saveArticle = (article) => (dispatch) => {
+  dispatch(saveArticleBegin());
+
+  if (article.id) {
+    return client.put(`/articles/${article.id}`, article)
+      .then(({ data }) => {
+        dispatch(updateArticleSuccess(data));
+        return data;
+      })
+      .catch((error) => {
+        dispatch(updateArticleFailure(error));
+        return Promise.reject(error);
+      });
+  } else {
+    return client.post('/articles', article)
+      .then(({ data }) => {
+        dispatch(createArticleSuccess(data));
+        return data;
+      })
+      .catch((error) => {
+        dispatch(createArticleFailure(error));
+        return Promise.reject(error);
+      });
+  }
 };
 
 export const fetchArticles = () => (dispatch) => {
