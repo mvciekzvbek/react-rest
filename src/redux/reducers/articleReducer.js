@@ -66,7 +66,12 @@ const articleReducer = (state = initialState.articles, action) => {
         items: [],
       };
     case DELETE_ARTICLE_OPTIMISTIC:
-      return state.filter((article) => article.id === action.payload.id);
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.error,
+        items: state.items.filter((article) => article.id === action.payload.id),
+      };
     default:
       return state;
   }
