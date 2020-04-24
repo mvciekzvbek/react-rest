@@ -6,7 +6,7 @@ import {
   UPDATE_ARTICLE_SUCCESS,
   FETCH_ARTICLE_BEGIN,
   FETCH_ARTICLE_SUCCESS,
-  FETCH_ARTICLE_FAILURE,
+  FETCH_ARTICLE_FAILURE, DELETE_ARTICLE_OPTIMISTIC,
 } from '../actions/actionTypes';
 
 import initialState from './initialState';
@@ -33,7 +33,12 @@ const articleReducer = (state = initialState.articles, action) => {
         items: [],
       };
     case UPDATE_ARTICLE_SUCCESS:
-      return state.map((article) => (article.id === action.article.id ? action.article : article));
+      return {
+        ...state,
+        loading: false,
+        error: null,
+        items: state.items.map((article) => (article.id === action.payload.article.id ? action.payload.article : article)),
+      };
     case UPDATE_ARTICLE_FAILURE:
       return {
         ...state,
@@ -60,6 +65,8 @@ const articleReducer = (state = initialState.articles, action) => {
         error: action.payload.error,
         items: [],
       };
+    case DELETE_ARTICLE_OPTIMISTIC:
+      return state.filter((article) => article.id === action.payload.id);
     default:
       return state;
   }

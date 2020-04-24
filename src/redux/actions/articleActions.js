@@ -8,7 +8,7 @@ import {
   UPDATE_ARTICLE_FAILURE,
   FETCH_ARTICLE_BEGIN,
   FETCH_ARTICLE_SUCCESS,
-  FETCH_ARTICLE_FAILURE,
+  FETCH_ARTICLE_FAILURE, DELETE_ARTICLE_OPTIMISTIC,
 } from './actionTypes';
 
 export const saveArticleBegin = () => ({
@@ -51,6 +51,11 @@ export const fetchArticleFailure = (error) => ({
   payload: { error },
 });
 
+export const deleteArticleOptimistic = (article) => ({
+  type: DELETE_ARTICLE_OPTIMISTIC,
+  payload: article,
+});
+
 export const saveArticle = (article) => (dispatch) => {
   dispatch(saveArticleBegin());
 
@@ -85,4 +90,9 @@ export const fetchArticles = () => (dispatch) => {
       return data;
     })
     .catch((error) => dispatch(fetchArticleFailure(error)));
+};
+
+export const deleteArticle = (article) => (dispatch) => {
+  dispatch(deleteArticleOptimistic(article));
+  return client.delete(`/articles/${article.id}`);
 };

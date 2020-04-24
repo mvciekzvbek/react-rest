@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const ArticlesList = (props) => {
+export const ArticlesList = (props) => {
   const { articles, categories, articleActions: actions } = props;
   const classes = useStyles();
   const [url, setUrl] = useState('/articles');
