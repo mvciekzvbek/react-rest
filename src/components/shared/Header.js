@@ -14,7 +14,7 @@ import Tab from '@material-ui/core/Tab';
 import Link from '@material-ui/core/Link';
 
 import { useAuth0 } from '../../react-auth0-spa';
-import UserAvatar from '../shared/UserAvatar';
+import UserAvatar from './UserAvatar';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,8 +48,8 @@ const useStyles = makeStyles((theme) => ({
     color: 'inherit',
 
     '&:hover': {
-      textDecoration: 'none'
-    }
+      textDecoration: 'none',
+    },
   },
 }));
 
@@ -77,69 +77,69 @@ export default function NavBar() {
     setValue(newValue);
   };
 
-  const a11yProps = (index) => {
-    return {
-      id: `simple-tab-${index}`,
-      'aria-controls': `simple-tabpanel-${index}`,
-    };
-  };
+  const a11yProps = (index) => ({
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  });
 
   return (
     <nav>
       <div className={classes.root}>
-      <AppBar position="static" className={classes.appBar}>
-        <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            <Link className={classes.link} component={RouterLink} to="/" >
+        <AppBar position="static" className={classes.appBar}>
+          <Toolbar>
+            <Typography variant="h6" className={classes.title}>
+              <Link className={classes.link} component={RouterLink} to="/">
               MZ
-            </Link>
-          </Typography>
-          {auth && (
-            <>
-              <div className={classes.grow} />
-              <div className={classes.sectionDesktop}>
-                <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-                  <Tab label="Latest" component={RouterLink} to="/latest" {...a11yProps(0)} />
-                  <Tab label="Categories" component={RouterLink} to="/categories" {...a11yProps(1)} />
-                </Tabs>
-              </div>
-              <div>
-                <IconButton
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={handleMenu}
-                  color="inherit"
-                >
-                  <UserAvatar user={user} />
-                </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={open}
-                  onClose={handleClose}
-                >
-                  <MenuItem onClick={handleClose} component={RouterLink} to="/profile">Profile</MenuItem>
-                  <MenuItem onClick={logout}>Logout</MenuItem>
-                </Menu>
-              </div>
-            </>
-          )}
-          {!auth && (
+              </Link>
+            </Typography>
+            {auth && (
+              <>
+                <div className={classes.grow} />
+                <div className={classes.sectionDesktop}>
+                  <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+                    <Tab label="Latest" component={RouterLink} to="/latest" {...a11yProps(0)} />
+                    <Tab label="Categories" component={RouterLink} to="/categories" {...a11yProps(1)} />
+                    <Tab label="Create" component={RouterLink} to="/create" {...a11yProps(1)} />
+                  </Tabs>
+                </div>
+                <div>
+                  <IconButton
+                    aria-label="account of current user"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    onClick={handleMenu}
+                    color="inherit"
+                  >
+                    <UserAvatar user={user} />
+                  </IconButton>
+                  <Menu
+                    id="menu-appbar"
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    open={open}
+                    onClose={handleClose}
+                  >
+                    <MenuItem onClick={handleClose} component={RouterLink} to={`/users/${user.nickname}`}>Profile</MenuItem>
+                    <MenuItem onClick={handleClose} component={RouterLink} to={`/users/${user.nickname}/articles`}>Your articles</MenuItem>
+                    <MenuItem onClick={logout}>Logout</MenuItem>
+                  </Menu>
+                </div>
+              </>
+            )}
+            {!auth && (
             <Button color="inherit" onClick={loginWithRedirect}>Log in</Button>
-          )}
-        </Toolbar>
-      </AppBar>
-    </div>
+            )}
+          </Toolbar>
+        </AppBar>
+      </div>
     </nav>
   );
 }
